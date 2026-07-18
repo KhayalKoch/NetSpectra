@@ -1,0 +1,24 @@
+# Virtual environment
+venv/
+__pycache__/
+*.pyc
+
+# Environment variables (API keys - VirusTotal, AbuseIPDB, OTX)
+.env
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated/output data (runtime-da yaranacaq)
+data/pcaps/*.pcap
+data/zeek_logs/*.log
+reports/compliance/*.csv
+reports/compliance/*.pdf
+reports/mitre_coverage.json
+
+# Log files
+*.log
