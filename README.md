@@ -63,12 +63,14 @@ NetSpectra/
 │   └── threat_intel/
 ├── dashboard/
 ├── lab/
-│   └── attack_simulation/
-│       ├── http_c2_beacon/
-│       │   ├── netspectra_c2_listener.py
-│       │   └── netspectra_c2_beacon.py
-│       └── ssh_post_exploitation/
-│           └── netspectra_c2_ssh.py
+│   ├── attack-scenarios/
+│   │   ├── http_c2_beacon/
+│   │   │   ├── netspectra_c2_listener.py
+│   │   │   └── netspectra_c2_beacon.py
+│   │   └── ssh_post_exploitation/
+│   │       └── netspectra_c2_ssh.py
+│   ├── docker-targets/
+│   └── kali/
 ├── data/
 │   ├── pcaps/
 │   └── zeek_logs/
@@ -93,16 +95,42 @@ NetSpectra/
 
 > **Goal:** Build a reproducible, isolated purple-team lab to generate ground-truth attack traffic for Zeek & Sigma detections.
 > **Outcome:** 4 MITRE ATT&CK techniques (T1046, T1110, T1021, T1071.001) fully simulated with labeled PCAPs for L3.
-> **Stack:** VirtualBox · Kali Linux · Metasploitable2 · Windows 11 · Docker (DVWA) · Python · Zeek · paramiko
+> **Stack:** VirtualBox · Kali Linux · Metasploitable2 · Windows 11 · Docker (DVWA) · Python · paramiko
 
 #### Lab Infrastructure
 
 | Component | IP | Role |
 |:---|:---|:---|
-| NetSpectra-Kali-Attacker | 192.168.56.107 | Attacker — nmap 7.98, medusa 2.3, hydra, custom C2 |
-| NetSpectra-Metasploitable-Victim | 192.168.56.103 | Network target — 24 open services (SSH, FTP, HTTP, SMB...) |
+| NetSpectra-Kali-Attacker | 192.168.56.107 | Attacker - nmap 7.98, medusa 2.3, hydra, custom C2 |
+| NetSpectra-Metasploitable-Victim | 192.168.56.103 | Network target - 24 open services (SSH, FTP, HTTP, SMB...) |
 | NetSpectra-Win11-Victim | 192.168.56.104 | Windows attack surface |
-| DVWA (Docker on Kali) | 127.0.0.1:80 | Web target — SQLi, XSS, Command Injection, Brute Force |
+| DVWA (Docker on Kali) | 127.0.0.1:80 | Web target - SQLi, XSS, Command Injection, Brute Force |
+
+#### Network Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              VirtualBox Host-Only Network                    │
+│                   192.168.56.0/24                           │
+│                                                             │
+│  ┌─────────────────┐    ┌──────────────────────────────┐   │
+│  │  Kali Attacker  │    │   Metasploitable Target      │   │
+│  │  eth1:          │───▶│   eth0: 192.168.56.103       │   │
+│  │  192.168.56.107 │    │   24 open services           │   │
+│  │                 │    └──────────────────────────────┘   │
+│  │  (also eth0:    │    ┌──────────────────────────────┐   │
+│  │   10.0.2.15     │───▶│   Windows 11 Victim          │   │
+│  │   NAT/internet) │    │   eth0: 192.168.56.104       │   │
+│  │                 │    └──────────────────────────────┘   │
+│  │  Docker:        │                                        │
+│  │  DVWA on        │                                        │
+│  │  127.0.0.1:80   │                                        │
+│  └─────────────────┘                                        │
+└─────────────────────────────────────────────────────────────┘
+                    ▲
+                    │ NO INTERNET ACCESS
+                    │ (Host-only = isolated)
+```
 
 **Network:** VirtualBox Host-only Adapter `192.168.56.0/24` — fully isolated, zero internet exposure. Kali dual-homed: `eth0` NAT (tooling/updates) + `eth1` Host-only (attack traffic). Every packet in the lab is intentional.
 
@@ -132,29 +160,16 @@ NetSpectra/
 
 #### Evidence
 
-![Kali Network Interfaces](screenshots/L0/01_kali_network_interfaces.png)
-*Kali dual-interface setup - eth0 NAT + eth1 Host-only lab network*
-
-![Metasploitable Target](screenshots/L0/02_metasploitable_ifconfig.png)
-*Metasploitable confirmed at 192.168.56.103 - 24 services running*
-
-![Network Connectivity](screenshots/L0/03_ping_connectivity.png)
-*Kali → Metasploitable: 0% packet loss - lab isolation confirmed*
-
-![Nmap Recon](screenshots/L0/04_nmap_recon_results.png)
-*T1046 - 24 open ports with service versions*
-
-![Brute Force + Shell](screenshots/L0/05_medusa_and_ssh_success.png)
-*T1110.001 - medusa cracks msfadmin:msfadmin + authenticated shell via SSH*
-
-![HTTP C2 Beacon](screenshots/L0/06_http_c2_beacon_test.png)
-*T1071.001 - listener + beacon confirmed, check-ins with jitter visible*
-
-![SSH C2](screenshots/L0/07_ssh_c2_test.png)
-*T1021 - periodic SSH check-ins, deep recon on 5th interval*
-
-![DVWA](screenshots/L0/08_dvwa_dashboard.png)
-*Web attack surface deployed - SQL injection, XSS, command injection ready*
+| Screenshot | Description |
+|:---|:---|
+| [01 — Kali Network Interfaces](screenshots/L0/01_kali_network_interfaces.png) | *Kali dual-interface setup - eth0 NAT + eth1 Host-only lab network* |
+| [02 — Metasploitable Target](screenshots/L0/02_metasploitable_ifconfig.png) | *Metasploitable confirmed at 192.168.56.103 - 24 services running* |
+| [03 — Network Connectivity](screenshots/L0/03_ping_connectivity.png) | *Kali → Metasploitable: 0% packet loss - lab isolation confirmed* |
+| [04 — Nmap Recon](screenshots/L0/04_nmap_recon_results.png) | *T1046 - 24 open ports with service versions* |
+| [05 — Brute Force + Shell](screenshots/L0/05_medusa_and_ssh_success.png) | *T1110.001 - medusa cracks msfadmin:msfadmin + authenticated shell via SSH* |
+| [06 — HTTP C2 Beacon](screenshots/L0/06_http_c2_beacon_test.png) | *T1071.001 - listener + beacon confirmed, check-ins with jitter visible* |
+| [07 — SSH C2](screenshots/L0/07_ssh_c2_test.png) | *T1021 - periodic SSH check-ins, deep recon on 5th interval* |
+| [08 — DVWA Dashboard](screenshots/L0/08_dvwa_dashboard.png) | *Web attack surface deployed - SQL injection, XSS, command injection ready* |
 
 > 📄 Full technical write-up including all engineering decisions, network diagrams, and troubleshooting: [docs/L0_technical_report.md](docs/L0_technical_report.md)
 
@@ -239,4 +254,4 @@ NetSpectra/
 Computer Science Student specializing in Cybersecurity · Otto-von-Guericke University Magdeburg
 [GitHub](https://github.com/KhayalKoch)
 
-> Building NetSpectra — SOC Network Threat Detection Platform with MITRE ATT&CK Mapping & Compliance Translation
+> Building NetSpectra - SOC Network Threat Detection Platform with MITRE ATT&CK Mapping & Compliance Translation
