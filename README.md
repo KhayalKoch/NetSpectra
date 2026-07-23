@@ -96,6 +96,11 @@ NetSpectra/
 > **Goal:** Build a reproducible, isolated purple-team lab to generate ground-truth attack traffic for Zeek & Sigma detections.
 > **Outcome:** 4 MITRE ATT&CK techniques (T1046, T1110, T1021, T1071.001) fully simulated with labeled PCAPs for L3.
 > **Stack:** VirtualBox · Kali Linux · Metasploitable2 · Windows 11 · Docker (DVWA) · Python · paramiko
+>
+
+#### Where Attacks Are Born
+
+L0 is the foundation layer of NetSpectra. Before any detection can be written, before any alert can fire, there must be a controlled, reproducible environment that generates real attack traffic. L0 establishes exactly that: a fully isolated lab network with a dedicated attacker machine, multiple vulnerable targets, and a complete attack simulation suite.
 
 #### Lab Infrastructure
 
@@ -148,9 +153,9 @@ NetSpectra/
 #### Custom C2 — Two Protocols, Two Detections
 
 **SSH C2 (`netspectra_c2_ssh.py`):**
-- Periodic SSH check-ins every `30 ± 10s` (jitter — mirrors real C2 frameworks: Cobalt Strike, Sliver)
+- Periodic SSH check-ins every `30 ± 10s` (jitter - mirrors real C2 frameworks: Cobalt Strike, Sliver)
 - Lightweight `whoami` each check-in; deep recon (`id`, `hostname`, `uname -a`) every 5th check-in
-- Jitter forces statistical detection, not simple interval matching — exactly what L3 will validate
+- Jitter forces statistical detection, not simple interval matching - exactly what L3 will validate
 
 **HTTP C2 (`netspectra_c2_listener.py` + `netspectra_c2_beacon.py`):**
 - Beacon: `GET /beacon` every `30 ± 10s` → logs to `beacon_sent.log` (ground truth for L3)
@@ -208,10 +213,10 @@ NetSpectra/
 
 - [ ] Threat Intelligence enrichment (VirusTotal, AbuseIPDB, OTX AlienVault)
 - [ ] IP Whitelisting engine with behavior model
-- [ ] Stateful Alert Correlation — 15-min sliding window, same `src_ip` + technique = 1 correlated alert (alert fatigue killer)
-- [ ] Explainable Risk Scoring — transparent breakdown e.g. `65% beacon interval + 20% VT malicious + 15% new dst` (no black-box scores)
+- [ ] Stateful Alert Correlation - 15-min sliding window, same `src_ip` + technique = 1 correlated alert (alert fatigue killer)
+- [ ] Explainable Risk Scoring - transparent breakdown e.g. `65% beacon interval + 20% VT malicious + 15% new dst` (no black-box scores)
 - [ ] MITRE ATT&CK mapping
-- [ ] Compliance Translation Layer — automatic mapping: `MITRE Technique → NIST CSF / ISO 27001:2022 / NIS2 / DORA` via `compliance_mapping.yml`
+- [ ] Compliance Translation Layer - automatic mapping: `MITRE Technique → NIST CSF / ISO 27001:2022 / NIS2 / DORA` via `compliance_mapping.yml`
 - [ ] Real-time alert notifications (Slack / Email)
 
 ---
@@ -220,8 +225,8 @@ NetSpectra/
 
 - [ ] SOC Dashboard with security metrics & risk explanation
 - [ ] Deep Investigation View
-- [ ] One-Click Evidence Bundle — single ZIP: `alert.json` + correlated Zeek logs + sliced PCAP + MITRE + compliance mapping
-- [ ] Compliance View — filter by NIS2 Art. 20 / DORA ICT / NIST CSF DE.CM, export audit-ready CSV/PDF
+- [ ] One-Click Evidence Bundle - single ZIP: `alert.json` + correlated Zeek logs + sliced PCAP + MITRE + compliance mapping
+- [ ] Compliance View - filter by NIS2 Art. 20 / DORA ICT / NIST CSF DE.CM, export audit-ready CSV/PDF
 - [ ] MITRE ATT&CK Navigator export with coverage heatmap
 - [ ] Full Docker deployment
 - [ ] Documentation & Demo Video
