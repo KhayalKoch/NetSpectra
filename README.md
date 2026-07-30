@@ -134,18 +134,18 @@ L0 is the foundation layer of NetSpectra. Before any detection can be written, b
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│              VirtualBox Host-Only Network                    │
+│              VirtualBox Host-Only Network                   │
 │                   192.168.56.0/24                           │
 │                                                             │
-│  ┌─────────────────┐    ┌──────────────────────────────┐   │
-│  │  Kali Attacker  │    │   Metasploitable Target      │   │
-│  │  eth1:          │───▶│   eth0: 192.168.56.103       │   │
-│  │  192.168.56.107 │    │   24 open services           │   │
-│  │                 │    └──────────────────────────────┘   │
-│  │  (also eth0:    │    ┌──────────────────────────────┐   │
+│  ┌─────────────────┐    ┌──────────────────────────────┐    │
+│  │  Kali Attacker  │    │   Metasploitable Target      │    │
+│  │  eth1:          │───▶│   eth0: 192.168.56.103      │    │
+│  │  192.168.56.107 │    │   24 open services           │    │
+│  │                 │    └──────────────────────────────┘    │
+│  │  (also eth0:    │    ┌──────────────────────────────┐    │
 │  │   10.0.2.15     │───▶│   Windows 11 Victim          │   │
-│  │   NAT/internet) │    │   eth0: 192.168.56.104       │   │
-│  │                 │    └──────────────────────────────┘   │
+│  │   NAT/internet) │    │   eth0: 192.168.56.104       │    │
+│  │                 │    └──────────────────────────────┘    │
 │  │  Docker:        │                                        │
 │  │  DVWA on        │                                        │
 │  │  127.0.0.1:80   │                                        │
@@ -261,20 +261,20 @@ Kali Attacker (192.168.56.107) → [Port Scan / Bruteforce / SSH C2] → Target 
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│              VirtualBox Host-Only Network                    │
+│              VirtualBox Host-Only Network                   │
 │                   192.168.56.0/24                           │
 │                                                             │
-│  ┌─────────────────┐    ┌──────────────────────────────┐   │
-│  │  Kali Attacker  │    │   Metasploitable Target      │   │
+│  ┌─────────────────┐    ┌──────────────────────────────┐    │
+│  │  Kali Attacker  │    │   Metasploitable Target      │    │
 │  │  192.168.56.107 │───▶│   192.168.56.103             │   │
-│  │  tcpdump -i eth1│    │   24 services                │   │
-│  │  -w *.pcap      │    └──────────────────────────────┘   │
+│  │  tcpdump -i eth1│    │   24 services                │    │
+│  │  -w *.pcap      │    └──────────────────────────────┘    │
 │  │                 │                                        │
-│  │  tcpdump -i lo  │    ┌──────────────────────────────┐   │
+│  │  tcpdump -i lo  │    ┌──────────────────────────────┐    │
 │  │  port 8080      │───▶│   HTTP C2 Listener           │   │
-│  │                 │    │   127.0.0.1:8080             │   │
-│  │  + Wireshark    │    │   GET /beacon?id=RANDOM      │   │
-│  │  Windows 11     │    └──────────────────────────────┘   │
+│  │                 │    │   127.0.0.1:8080             │    │
+│  │  + Wireshark    │    │   GET /beacon?id=RANDOM      │    │
+│  │  Windows 11     │    └──────────────────────────────┘    │
 │  └─────────────────┘                                        │
 │         │                                                   │
 │         │ python3 -m http.server 8000 (PCAP transfer)       │
