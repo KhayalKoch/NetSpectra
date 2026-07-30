@@ -1,0 +1,15 @@
+-rw-r--r-- 1 kali    kali    3.2K Jul 24 05:18 /home/kali/netspectra/data/pcaps/2026-07-24_05-16-35_test_capture2.pcap
+-rw-r--r-- 1 kali    kali    247K Jul 24 06:03 /home/kali/netspectra/data/pcaps/2026-07-24_05-50-26_port_scan.pcap
+-rw-r--r-- 1 tcpdump tcpdump 7.4K Jul 24 06:35 /home/kali/netspectra/data/pcaps/2026-07-24_06-32-07_bruteforce.pcap
+-rw-r--r-- 1 tcpdump tcpdump 9.6K Jul 24 18:37 /home/kali/netspectra/data/pcaps/2026-07-24_18-29-52_http_c2_beacon.pcap
+-rw-r--r-- 1 tcpdump tcpdump 111K Jul 25 03:49 /home/kali/netspectra/data/pcaps/2026-07-25_03-43-59_ssh_c2.pcap
+    4   0.000156    127.0.0.1 → 127.0.0.1    HTTP 235 GET /beacon?id=9078 HTTP/1.1 
+   10   0.000421    127.0.0.1 → 127.0.0.1    HTTP 72 HTTP/1.0 200 OK 
+   16  30.003143    127.0.0.1 → 127.0.0.1    HTTP 235 GET /beacon?id=2946 HTTP/1.1 
+   22  30.004447    127.0.0.1 → 127.0.0.1    HTTP 72 HTTP/1.0 200 OK 
+   28  60.007186    127.0.0.1 → 127.0.0.1    HTTP 235 GET /beacon?id=9580 HTTP/1.1 
+    4   0.007535    127.0.0.1 → 127.0.0.1    SSH 96 Client: Protocol (SSH-2.0-paramiko_4.0.0)
+    6   0.027677    127.0.0.1 → 127.0.0.1    SSHv2 105 Server: Protocol (SSH-2.0-OpenSSH_10.3p1 Debian-5)
+    8   0.034368    127.0.0.1 → 127.0.0.1    SSHv2 1112 Server: Key Exchange Init
+   10   0.036317    127.0.0.1 → 127.0.0.1    SSHv2 1328 Client: Key Exchange Init
+   12   0.076179    127.0.0.1 → 127.0.0.1    SSHv2 120 Client: Elliptic Curve Diffie-Hellman Key Exchange Init

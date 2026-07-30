@@ -12,13 +12,38 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Generated/output data (runtime-da yaranacaq)
+# === NetSpectra L0-L1 Generated Data ===
+
+# PCAPs - REAL traffic, too big for Git - keep structure only
 data/pcaps/*.pcap
-data/zeek_logs/*.log
+!data/pcaps/.gitkeep
+
+# Zeek logs - generated from PCAPs, can be regenerated via `zeek -C -r *.pcap`
+# Ignore all logs recursively in zeek_logs and subfolders
+data/zeek_logs/**/*.log
+data/zeek_logs/**/ *.log
+data/zeek_logs/
+!data/zeek_logs/.gitkeep
+
+# BUT KEEP L1 facts and summaries - these are evidence!
+!data/pcaps/L1_facts.txt
+!data/zeek_logs/summary.json
+!data/zeek_logs/summary.txt
+
+# Reports - generated compliance
 reports/compliance/*.csv
 reports/compliance/*.pdf
-reports/mitre_coverage.json
+# reports/mitre_coverage.json - L0 üçün saxlayaq, L4-də generate olacaq
+# reports/mitre_coverage.json
 
-# Log files
+# Log files - general, but NOT in data/ (to avoid double ignore)
 *.log
+!data/pcaps/*.txt
+!data/zeek_logs/*.json
+!data/zeek_logs/*.txt
+
+# Screenshots - KEEP! HR needs them
+!screenshots/L0/*.png
+!screenshots/L1/*.png

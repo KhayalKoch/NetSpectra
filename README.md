@@ -98,7 +98,6 @@ NetSpectra/
 │   └── L1/
 ├── docs/
 │   ├── L0_technical_report.md
-│   └── L1_technical_report.md
 ├── netspectra_zeek_analyze.py
 ├── docker-compose.yml
 ├── requirements.txt
@@ -309,44 +308,10 @@ Kali Attacker (192.168.56.107) → [Port Scan / Bruteforce / SSH C2] → Target 
 | HTTP C2 Beacon | T1071.001 - Web Protocols | `http.log` GET /beacon · python-requests UA | 7 beacons · 30s interval · 12f/1155B |
 | SSH C2 | T1021 - Remote Services | `ssh.log` auth_success=T · paramiko banner | 20s interval · 40f/7.5KB · random sport |
 
-#### Triple Validation - Golden Rule in Practice
+#### Forensic Validation Pipeline
 
-**1. Wireshark GUI - Visual Ground Truth**
-
-| PCAP | Filter | Pattern |
-|:---|:---|:---|
-| port_scan | `tcp` | `SYN → [RST,ACK]` rapid port sweep - 53, 1720, 3389, 110... |
-| bruteforce | `ssh` | `SSH-2.0-MEDUSA_1.0 → SSH-2.0-OpenSSH_4.7p1` - no session data |
-| http_c2 | `http` | `GET /beacon?id=9078 → 200 OK` - periodic, fixed endpoint |
-| ssh_c2 | `ssh` | `SSH-2.0-paramiko_4.0.0 → SSH-2.0-OpenSSH_10.3p1` - full sessions, random sport |
-
-**2. tshark CLI - Statistical Proof**
-
-```bash
-tshark -r *port_scan.pcap -Y "tcp.flags.syn==1 && tcp.flags.ack==0" | wc -l  # → 1055
-tshark -q -z io,stat,0.1 -r *port_scan.pcap                                    # → 2278 fps burst
-tshark -q -z io,stat,1 -r *http_c2_beacon.pcap                                 # → 12f/1155B per 30s
-tshark -q -z io,stat,1 -r *ssh_c2.pcap                                         # → 40f/7.5KB per 20s
-capinfos *.pcap && sha256sum ~/netspectra/data/pcaps/*.pcap                     # forensic chain
-```
-
-**3. Zeek IDS - Structured Intelligence**
-
-```bash
-zeek -C -r *.pcap   # -C mandatory - ignores VirtualBox checksum offloading errors
-```
-
-**Engineering note on `-C` flag:** Without `-C`, Zeek silently drops 30–40% of packets on virtualized infrastructure. `tshark` ignores checksums by default - another reason triple validation matters.
-
-**Zeek log breakdown:**
-
-`conn.log` (port_scan): `192.168.56.107 → 192.168.56.103` - 978 REJ, state S0, history ShR across ports 53, 1720, 3389, 110, 113, 995...
-
-`ssh.log` (bruteforce): `auth_success=F · MEDUSA_1.0 · OpenSSH_4.7p1 · cipher aes256-ctr · mac hmac-sha1 · kex diffie-hellman-group-exchange-sha256`
-
-`ssh.log` (ssh_c2): `auth_success=T · paramiko_4.0.0 · OpenSSH_10.3p1 · cipher aes128-ctr · mac hmac-sha2-256 · kex curve25519-sha256@libssh.org · host_key ssh-ed25519 · orig_p 59978,37714,49226`
-
-`http.log` (http_c2): `GET /beacon?id=9078 · 127.0.0.1:8080 · python-requests/2.32.5 · 200 OK · text/plain` — IDs: 9078, 2946, 9580, 3856, 5816, 1822, 2515
+> Every PCAP validated via **Wireshark GUI + tshark CLI + Zeek IDS** — full forensic proof in Evidence below. `zeek -C -r *.pcap` mandatory (VirtualBox checksum offloading).
+> **Zeek:** `conn.log 978 REJ S0` · `ssh.log MEDUSA fail + paramiko success` · `http.log 7 beacons python-requests`
 
 #### Problem Solving - 4 Critical Fixes
 
