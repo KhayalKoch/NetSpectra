@@ -1,11 +1,5 @@
 <div align="center">
 
-![L0](https://img.shields.io/badge/L0-COMPLETE-green?style=for-the-badge)
-![L1](https://img.shields.io/badge/L1-COMPLETE-33_evidences-blue?style=for-the-badge)
-![PCAPs](https://img.shields.io/badge/PCAPs-5_verified-orange?style=for-the-badge)
-![MITRE](https://img.shields.io/badge/MITRE-T1046_T1110_T1071_mapped-red?style=for-the-badge)
-![Zeek](https://img.shields.io/badge/Zeek-6.x_978_REJ-black?style=for-the-badge)
-
 # NetSpectra
 
 ### SOC Network Threat Detection Platform with MITRE ATT&CK Mapping & Compliance Translation (NIST CSF, ISO27001, NIS2, DORA)
