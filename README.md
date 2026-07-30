@@ -310,7 +310,7 @@ Kali Attacker (192.168.56.107) → [Port Scan / Bruteforce / SSH C2] → Target 
 
 #### Forensic Validation Pipeline
 
-> Every PCAP validated via **Wireshark GUI + tshark CLI + Zeek IDS** — full forensic proof in Evidence below. `zeek -C -r *.pcap` mandatory (VirtualBox checksum offloading).
+> Every PCAP validated via **Wireshark GUI + tshark CLI + Zeek IDS** - full forensic proof in Evidence below. `zeek -C -r *.pcap` mandatory (VirtualBox checksum offloading).
 > **Zeek:** `conn.log 978 REJ S0` · `ssh.log MEDUSA fail + paramiko success` · `http.log 7 beacons python-requests`
 
 #### Problem Solving - 4 Critical Fixes
