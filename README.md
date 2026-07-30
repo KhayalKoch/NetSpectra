@@ -287,7 +287,7 @@ Kali Attacker (192.168.56.107) → [Port Scan / Bruteforce / SSH C2] → Target 
                     │ Golden Rule: GUI + CLI + IDS must match
 ```
 
-#### PCAP Collection — 5 Verified
+#### PCAP Collection - 5 Verified
 
 | # | File | Size | MITRE | Interval | Signature | L3 Signal |
 |:---|:---|:---|:---|:---|:---|:---|
