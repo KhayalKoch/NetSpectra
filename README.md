@@ -167,12 +167,12 @@ L0 is the foundation layer of NetSpectra. Before any detection can be written, b
 | SSH Post-Exploitation | paramiko (custom C2) | T1021 | Authenticated shell, periodic check-ins | Periodic SSH sessions with jitter (conn.log) |
 | HTTP C2 Beaconing | Custom Python beacon | T1071.001 | Listener confirmed, 200 OK per check-in | Periodic HTTP GET with jitter + UA anomaly (http.log) |
 
-**Engineering note on T1110:** `hydra` failed with `libssh error` — Metasploitable runs OpenSSH 4.7p1 with legacy KEX algorithms dropped by modern libssh. Switched to `medusa 2.3` which implements its own SSH client. Lesson: tool compatibility with legacy infrastructure is a real constraint in production engagements.
+**Engineering note on T1110:** `hydra` failed with `libssh error` - Metasploitable runs OpenSSH 4.7p1 with legacy KEX algorithms dropped by modern libssh. Switched to `medusa 2.3` which implements its own SSH client.
 
 #### Custom C2 - Two Protocols, Two Detections
 
 **SSH C2 (`netspectra_c2_ssh.py`):**
-- Periodic SSH check-ins every `20s` (measured via tshark io,stat — mirrors real C2 frameworks: Cobalt Strike, Sliver)
+- Periodic SSH check-ins every `20s` (measured via tshark io,stat - mirrors real C2 frameworks: Cobalt Strike, Sliver)
 - Lightweight `whoami` each check-in; deep recon (`id`, `hostname`, `uname -a`) every 5th check-in
 - Jitter forces statistical detection, not simple interval matching — exactly what L3 will validate
 
@@ -205,7 +205,7 @@ L0 is the foundation layer of NetSpectra. Before any detection can be written, b
 
 ###  L1 - Traffic Collection & Protocol Analysis `Executed`
 
-> **Goal:** Transform raw attack traffic into forensically-validated, structured network metadata — bridging L0 attack simulation to L2 structured analytics.
+> **Goal:** Transform raw attack traffic into forensically-validated, structured network metadata - bridging L0 attack simulation to L2 structured analytics.
 > **Outcome:** 5 PCAPs (4 TTPs + 1 test) captured via `tcpdump`, triple-validated via Wireshark GUI + tshark CLI + Zeek IDS, producing `conn.log` 978 REJ, `ssh.log` paramiko/MEDUSA, `http.log` beacon - with 33 forensic screenshots.
 > **Stack:** tcpdump · Wireshark 4.x · tshark · Zeek 6.x · capinfos · nmap · Python · Kali Linux · Windows 11
 
@@ -472,9 +472,6 @@ cat data/reports/summary.json
 
 >  Forensic chain: `L1_facts.txt` + `summary.json` + `summary.txt` — every number in this document is verifiable. Zero fabrication.
 >
->  Full technical write-up: [docs/L1_technical_report.md](docs/L1_technical_report.md)
-
-
 ---
 
 ###  L2 - Structured Data `IN PROGRESS`
